@@ -49,6 +49,51 @@ public:
 		x = value_x;
 		y = value_y;
 	}
+
+	float magnitude() {
+		return sqrt(x*x + y*y);
+	}
+
+	void normalize() {
+		float m = magnitude();
+		if (m != 0) {
+			x = x/m;
+			y = y/m;
+		}
+	}
+
+	void multScalar(float d) {
+		x *= d;
+		y *= d;
+	}
+	void divScalar(float d) {
+		x /= d;
+		y /= d;
+	}
+
+	void addVect(Vect v) {
+		x += v.x;
+		y += v.y;
+	}
+	void subVect(Vect v) {
+		x -= v.x;
+		y -= v.y;
+	}
+
+	void limit(float max) {
+		float size = magnitude();
+	    if (size > max) {
+			x /= size;
+			y /= size;
+    	}
+	}
+
+	Vect subTwo(Vect v_1, Vect v_2) {
+		Vect diff(0, 0);
+		diff.x = v_1.x - v_2.x;
+		diff.y = v_1.y - v_2.y;
+		return diff;
+	}
 };
 
 class RandomNumberGenerator {

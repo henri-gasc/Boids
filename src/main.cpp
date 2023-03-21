@@ -17,13 +17,11 @@ int main() {
     while (app.isRunning()) {
         for (int i = 0; i < nbr_boids; i++) {
             Boid boid = all_Boids[i];
-            boid.apply_flock(all_Boids);
-            boid.update_pos();
+            boid.update(all_Boids);
             app.draw(boid.shape);
             all_Boids[i] = boid;
         }
         app.display();
     }
-
     return 0;
 }
