@@ -3,7 +3,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 int main() {
-    const int nbr_boids = 50;
+    const int nbr_boids = 250;
 
     boost::ptr_vector<Boid> all_Boids(nbr_boids);
     WindowHandler app;

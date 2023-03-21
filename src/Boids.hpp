@@ -21,9 +21,8 @@ public:
 		acceleration(0, 0),
 		shape(5.f, 3)
 	{
-		vision_radius = 100;
-		wanted_distance = 20;
-		// update_pos();
+		vision_radius = 70;
+		wanted_distance = 25;
 	};
 
 	void apply_borders() {
@@ -41,6 +40,7 @@ public:
 
 	void update_pos() {
 		apply_borders();
+		put_angle();
 		shape.setPosition(pos.x, pos.y);
 	}
 
@@ -105,7 +105,7 @@ public:
 	Vect Cohesion(boost::ptr_vector<Boid> all_boids) {
 		Vect avg_loc(0, 0);
 		int count = 0;
-		for (int i  = 0; (int) all_boids.size(); i++) {
+		for (int i = 0; i < (int) all_boids.size(); i++) {
 			float d = distance(all_boids[i].pos);
 			if ((d > 0) && (d < vision_radius)) {
 				avg_loc.addVect(all_boids[i].pos);
@@ -143,6 +143,6 @@ public:
 		pos.addVect(speed);
 		acceleration.multScalar(0);
 
-		apply_borders();
+		update_pos();
 	}
 };

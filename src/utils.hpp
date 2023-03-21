@@ -7,8 +7,8 @@
 #include <math.h>
 #include <random>
 
-#define WINDOW_HEIGHT 960
-#define WINDOW_WIDTH 540
+#define WINDOW_HEIGHT 1500
+#define WINDOW_WIDTH 750
 
 class WindowHandler {
 public:
