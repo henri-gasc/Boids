@@ -10,15 +10,16 @@ int main() {
     RandomNumberGenerator rng(-100, 200);
 
     for (int i = 0; i < nbr_boids; i++) {
-        Boid *test = new Boid(i*10, i*10, &rng);
+        Boid *test = new Boid(WINDOW_HEIGHT/2, WINDOW_WIDTH/2, &rng);
         all_Boids.push_back(test);
     }
 
     while (app.isRunning()) {
         for (int i = 0; i < nbr_boids; i++) {
             Boid boid = all_Boids[i];
-            app.draw(boid.shape);
+            boid.apply_flock(all_Boids);
             boid.update_pos();
+            app.draw(boid.shape);
             all_Boids[i] = boid;
         }
         app.display();

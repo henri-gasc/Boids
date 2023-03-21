@@ -4,6 +4,7 @@
 #include <SFML/Window/Window.hpp>
 #include <cstdlib>
 #include <ctime>
+#include <math.h>
 #include <random>
 
 #define WINDOW_HEIGHT 960
