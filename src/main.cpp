@@ -7,10 +7,10 @@ int main() {
 
     boost::ptr_vector<Boid> all_Boids(nbr_boids);
     WindowHandler app;
-    RandomNumberGenerator rng(0, 200);
+    RandomNumberGenerator rng(-100, 200);
 
     for (int i = 0; i < nbr_boids; i++) {
-        Boid *test = new Boid(i*10, i*10, rng.pick()/100, rng.pick()/100);
+        Boid *test = new Boid(i*10, i*10, &rng);
         all_Boids.push_back(test);
     }
 

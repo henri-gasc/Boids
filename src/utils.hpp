@@ -51,17 +51,26 @@ public:
 };
 
 class RandomNumberGenerator {
-public:
+private:
 	std::random_device rd;
 	std::uniform_int_distribution<> distrib;
 	std::mt19937 gen;
-
+public:
+	int min;
+	int max;
 	RandomNumberGenerator(int minimum = 0, int maximum = 1):
 		distrib(minimum, maximum),
 		gen(rd())
-	{}
+	{
+		min = minimum;
+		max = maximum;
+	}
 
 	float pick() {
 		return distrib(gen);
+	}
+
+	int range() {
+		return max - min;
 	}
 };

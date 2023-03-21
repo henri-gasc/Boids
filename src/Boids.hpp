@@ -1,19 +1,22 @@
 #include <SFML/Graphics/CircleShape.hpp>
+#include <math.h>
 #include "utils.hpp"
 
 class Boid {
 public:
 	Vect pos;
-	Vect speed;
-	Vect acceleration;
+	float speed;
+	float acceleration;
+	float angle;
 	sf::CircleShape shape;
 
-	Boid(float pos_x, float pos_y, float speed_x, float speed_y): 
+	Boid(float pos_x, float pos_y, RandomNumberGenerator *rng): 
 		pos(pos_x, pos_y),
-		speed(speed_x, speed_y),
-		acceleration(0, 0),
 		shape(5.f, 3)
 	{
+		speed = rng->pick()/100;
+		angle = rng->pick()/rng->range() * 2*M_PI;
+		acceleration = 0;
 		update_pos();
 	};
 
@@ -25,8 +28,8 @@ public:
 	}
 
 	void update_pos() {
-		pos.x += speed.x;
-		pos.y += speed.y;
+		pos.x += speed * cos(angle);
+		pos.y += speed * sin(angle);
 		apply_borders();
 		shape.setPosition(pos.x, pos.y);
 	}
