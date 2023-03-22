@@ -8,7 +8,7 @@
 #include <random>
 
 #define WINDOW_HEIGHT 1500
-#define WINDOW_WIDTH 750
+#define WINDOW_WIDTH 1000
 
 class WindowHandler {
 public:
@@ -21,14 +21,14 @@ public:
 	}
 
 	bool isRunning() {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+		sf::Event event;
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+		}
 
-        window.clear();
+		window.clear();
 		return window.isOpen();
 	}
 
@@ -62,6 +62,10 @@ public:
 		}
 	}
 
+	float dot(Vect v) {
+		return x*v.x + y*v.y;
+	}
+
 	void multScalar(float d) {
 		x *= d;
 		y *= d;
@@ -82,10 +86,10 @@ public:
 
 	void limit(float max) {
 		float size = magnitude();
-	    if (size > max) {
+		if (size > max) {
 			x /= size;
 			y /= size;
-    	}
+		}
 	}
 
 	Vect subTwo(Vect v_1, Vect v_2) {

@@ -2,28 +2,27 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <cstdio>
 #include <math.h>
-#include "utils.hpp"
+#include "Obstacle.hpp"
 
 class Boid {
 public:
 	Vect pos;
 	Vect speed;
 	Vect acceleration;
-	float vision_radius;
-	float wanted_distance;
-	float max_speed = 4;
+	float vision_radius = 50;
+	float distance_boids = 20;
+	float distance_obstacle = 3 * distance_boids;
+	float max_speed = 3.5;
 	float max_force = 0.5;
+	float border = 50;
 	sf::CircleShape shape;
 
 	Boid(int pos_x, int pos_y, RandomNumberGenerator *rng): 
 		pos(pos_x, pos_y),
 		speed(rng->pick()/100, rng->pick()/100),
 		acceleration(0, 0),
-		shape(5.f, 3)
-	{
-		vision_radius = 70;
-		wanted_distance = 25;
-	};
+		shape(3.f, 3)
+	{};
 
 	void apply_borders() {
 		if (pos.x < 0) { pos.x += WINDOW_HEIGHT;}
@@ -32,15 +31,14 @@ public:
 		else if (pos.y > WINDOW_WIDTH) { pos.y -= WINDOW_WIDTH;}
 	}
 
-	float put_angle() {
+	float get_angle() {
 		float angle = atan2(speed.x, -speed.y) * 180 / M_PI;
-		shape.setRotation(angle);
 		return angle;
 	}
 
 	void update_pos() {
 		apply_borders();
-		put_angle();
+		shape.setRotation(get_angle());
 		shape.setPosition(pos.x, pos.y);
 	}
 
@@ -57,11 +55,11 @@ public:
 		int count = 0;
 		for (int i = 0; i < (int) all_boids.size(); i++) {
 			float d = distance(all_boids[i].pos);
-			if ((d > 0) && (d < wanted_distance)) {
+			if ((d > 0) && (d < distance_boids)) {
 				Vect diff(0, 0);
 				diff = diff.subTwo(pos, all_boids[i].pos);
 				diff.normalize();
-				diff.multScalar(d);
+				diff.divScalar(d);
 				steering.addVect(diff);
 				count++;
 			}
@@ -128,14 +126,73 @@ public:
 		}
 	}
 
-	void update(boost::ptr_vector<Boid> all_boids) {
+	Vect AvoidVerticalBorders() {
+		Vect steering(0, 0);
+		if ((pos.x > WINDOW_HEIGHT - border) || (pos.x < border)) {
+			float angle = get_angle();
+			if (abs(angle) >= 90) {
+				steering.x = angle*0.2;
+				steering.y = 0;
+			}
+		}
+		return steering;
+	}
+
+	Vect AvoidObstacles(boost::ptr_vector<Obstacle> all_obstacles) {
+		Vect steering(0, 0);
+		// Vect diff = AvoidVerticalBorders();
+		// if (pos.y > WINDOW_WIDTH - border) {
+		// 	// diff.x += pos.x;
+		// 	diff.y += pos.y - WINDOW_WIDTH + border;
+		// }
+		// else if (pos.y < border) {
+		// 	// diff.x += pos.x;
+		// 	diff.y += pos.y - border;
+		// }
+		// steering.addVect(diff);
+		// steering.normalize();
+		// steering.multScalar(10);
+		int count = 0;
+		for (int i = 0; i < (int) all_obstacles.size(); i++) {
+			float d = distance(all_obstacles[i].pos);
+			if (d < distance_obstacle) {
+				Vect diff(0, 0);
+				diff = diff.subTwo(pos, all_obstacles[i].pos);
+				diff.normalize();
+				diff.divScalar(d*d*d);
+				steering.addVect(diff);
+				count++;
+			}
+		}
+		if (count > 0) {
+			steering.divScalar(count);
+		}
+		if (steering.magnitude() > 0) {
+			steering.normalize();
+			steering.multScalar(max_speed);
+			steering.subVect(speed);
+			steering.limit(max_force);
+		}
+		if (steering.magnitude() < 0) {
+			printf("This should not happen\n");
+		}
+		return steering;
+	}
+
+	void update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<Obstacle> all_obstacles) {
 		Vect sep = Separation(all_boids);
 		Vect ali = Alignement(all_boids);
 		Vect coh = Cohesion(all_boids);
+		Vect obs = AvoidObstacles(all_obstacles);
+
+		sep.multScalar(1.5);
+		ali.multScalar(1.0);
+		coh.multScalar(1.0);
 
 		applyForce(sep);
 		applyForce(coh);
 		applyForce(ali);
+		applyForce(obs);
 
 		acceleration.multScalar(.4);
 		speed.addVect(acceleration);
