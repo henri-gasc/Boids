@@ -140,22 +140,10 @@ public:
 
 	Vect AvoidObstacles(boost::ptr_vector<Obstacle> all_obstacles) {
 		Vect steering(0, 0);
-		// Vect diff = AvoidVerticalBorders();
-		// if (pos.y > WINDOW_WIDTH - border) {
-		// 	// diff.x += pos.x;
-		// 	diff.y += pos.y - WINDOW_WIDTH + border;
-		// }
-		// else if (pos.y < border) {
-		// 	// diff.x += pos.x;
-		// 	diff.y += pos.y - border;
-		// }
-		// steering.addVect(diff);
-		// steering.normalize();
-		// steering.multScalar(10);
 		int count = 0;
 		for (int i = 0; i < (int) all_obstacles.size(); i++) {
 			float d = distance(all_obstacles[i].pos);
-			if (d < distance_obstacle) {
+			if ((d > 0) && (d < distance_obstacle)) {
 				Vect diff(0, 0);
 				diff = diff.subTwo(pos, all_obstacles[i].pos);
 				diff.normalize();
@@ -173,9 +161,6 @@ public:
 			steering.subVect(speed);
 			steering.limit(max_force);
 		}
-		if (steering.magnitude() < 0) {
-			printf("This should not happen\n");
-		}
 		return steering;
 	}
 
@@ -188,6 +173,7 @@ public:
 		sep.multScalar(1.5);
 		ali.multScalar(1.0);
 		coh.multScalar(1.0);
+		obs.multScalar(1.0);
 
 		applyForce(sep);
 		applyForce(coh);

@@ -9,7 +9,8 @@ To compile this project, you need [CMake](https://cmake.org), [Boost](http://boo
 ## TODO
 
 - [x] Add obstacles
-- [ ] Correct boids behaviour around obstacles
+- [x] Correct boids behaviour around obstacles
+  - [ ] Allow boids to adopt a tear-drop shape around the obstacles
 - [ ] Speed up the algorithms
 - [ ] Allow adding new rules easily
 - [ ] Make the code easier to read
