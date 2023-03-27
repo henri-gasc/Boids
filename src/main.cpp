@@ -3,13 +3,18 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Event.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <cstdio>
+#include <filesystem>
 
 int main() {
 	const int nbr_boids = 200;
-	const int nbr_obstacles = 5;
+	const int nbr_obstacles = 0;
+	const bool save_to_file = true;
+	if (save_to_file) {
+		std::filesystem::create_directories("./images");
+	}
 
 	boost::ptr_vector<Boid> all_Boids(nbr_boids);
 	boost::ptr_vector<Obstacle> all_Obstacles(nbr_obstacles);
@@ -29,6 +34,10 @@ int main() {
 		all_Obstacles.push_back(obst);
 	}
 
+	int counter = 0;
+	if (save_to_file) {
+		app.save(counter);
+	}
 	while (app.isRunning()) {
 		for (int i = 0; i < nbr_boids; i++) {
 			Boid boid = all_Boids[i];
@@ -39,7 +48,11 @@ int main() {
 		for (int i = 0; i < nbr_obstacles; i++) {
 			app.draw(all_Obstacles[i].shape);
 		}
+		if (save_to_file) {
+			app.save(counter);
+		}
 		app.display();
+		counter ++;
 	}
 	return 0;
 }

@@ -1,8 +1,10 @@
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Window.hpp>
 #include <cstdlib>
+#include <cstring>
 #include <ctime>
 #include <math.h>
 #include <random>
@@ -13,10 +15,12 @@
 class WindowHandler {
 public:
 	sf::RenderWindow window;
+	sf::RenderTexture texture;
 
 	WindowHandler():
 		window(sf::VideoMode(WINDOW_HEIGHT, WINDOW_WIDTH), "SFML", sf::Style::Default)
 	{
+		texture.create(WINDOW_HEIGHT, WINDOW_WIDTH);
 		window.setFramerateLimit(40);
 	}
 
@@ -29,15 +33,25 @@ public:
 		}
 
 		window.clear();
+		texture.clear();
 		return window.isOpen();
 	}
 
 	void draw(const sf::Drawable & drawable) {
 		window.draw(drawable);
+		texture.draw(drawable);
 	}
 
 	void display() {
 		window.display();
+	}
+
+	void save(int number) {
+		char name[100] = "images/part.";
+		char format[6] = ".%05i";
+		sprintf(strstr(name, "."), format, number);
+		strcat(name, ".png");
+		texture.getTexture().copyToImage().saveToFile(name);
 	}
 };
 
