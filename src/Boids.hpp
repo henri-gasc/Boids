@@ -1,6 +1,5 @@
-#include <SFML/Graphics/CircleShape.hpp>
+#pragma once
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <cstdio>
 #include <math.h>
 #include "Obstacle.hpp"
 
@@ -16,19 +15,22 @@ public:
 	float max_force = 0.5;
 	float border = 50;
 	sf::CircleShape shape;
+	Config *conf;
 
-	Boid(int pos_x, int pos_y, RandomNumberGenerator *rng): 
+	Boid(int pos_x, int pos_y, RandomNumberGenerator *rng, Config* config):
 		pos(pos_x, pos_y),
 		speed(rng->pick()/100, rng->pick()/100),
 		acceleration(0, 0),
 		shape(3.f, 3)
-	{};
+	{
+		conf = config;
+	};
 
 	void apply_borders() {
-		if (pos.x < 0) { pos.x += WINDOW_HEIGHT;}
-		else if (pos.x > WINDOW_HEIGHT) { pos.x -= WINDOW_HEIGHT;}
-		if (pos.y < 0) { pos.y += WINDOW_WIDTH;}
-		else if (pos.y > WINDOW_WIDTH) { pos.y -= WINDOW_WIDTH;}
+		if (pos.x < 0) { pos.x += conf->window_height;}
+		else if (pos.x > conf->window_height) { pos.x -= conf->window_height;}
+		if (pos.y < 0) { pos.y += conf->window_width;}
+		else if (pos.y > conf->window_width) { pos.y -= conf->window_width;}
 	}
 
 	float get_angle() {
@@ -128,7 +130,7 @@ public:
 
 	Vect AvoidVerticalBorders() {
 		Vect steering(0, 0);
-		if ((pos.x > WINDOW_HEIGHT - border) || (pos.x < border)) {
+		if ((pos.x > conf->window_height - border) || (pos.x < border)) {
 			float angle = get_angle();
 			if (abs(angle) >= 90) {
 				steering.x = angle*0.2;

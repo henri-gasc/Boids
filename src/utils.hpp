@@ -1,27 +1,27 @@
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/RenderTexture.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/Window/Event.hpp>
-#include <SFML/Window/Window.hpp>
+#pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <math.h>
 #include <random>
+#include "config.hpp"
 
-#define WINDOW_HEIGHT 1500
-#define WINDOW_WIDTH 1000
-
-class WindowHandler {
+class Application {
 public:
 	sf::RenderWindow window;
 	sf::RenderTexture texture;
+	Config *conf;
 
-	WindowHandler():
-		window(sf::VideoMode(WINDOW_HEIGHT, WINDOW_WIDTH), "SFML", sf::Style::Default)
+	Application(Config *config):
+		window(sf::VideoMode(config->window_height, config->window_width), "SFML", sf::Style::Default)
 	{
-		texture.create(WINDOW_HEIGHT, WINDOW_WIDTH);
-		window.setFramerateLimit(40);
+		conf = config;
+		if (conf->save_to_file) {
+			texture.create(conf->window_height, conf->window_width);
+		}
+		window.setFramerateLimit(conf->framerate);
 	}
 
 	bool isRunning() {
@@ -30,6 +30,9 @@ public:
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+			else if (event.key.code == sf::Keyboard::Q) {
+				window.close();
+			}
 		}
 
 		window.clear();
@@ -38,8 +41,12 @@ public:
 	}
 
 	void draw(const sf::Drawable & drawable) {
-		window.draw(drawable);
-		texture.draw(drawable);
+		if (conf->show_simulations) {
+			window.draw(drawable);
+		}
+		if (conf->save_to_file) {
+			texture.draw(drawable);
+		}
 	}
 
 	void display() {
@@ -47,6 +54,7 @@ public:
 	}
 
 	void save(int number) {
+		if (not conf->save_to_file) return;
 		char name[100] = "images/part.";
 		char format[6] = ".%05i";
 		sprintf(strstr(name, "."), format, number);

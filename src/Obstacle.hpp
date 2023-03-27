@@ -1,7 +1,5 @@
 #pragma once
 #include "utils.hpp"
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/Color.hpp>
 
 class Obstacle {
 public:
