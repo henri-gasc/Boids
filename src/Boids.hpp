@@ -175,7 +175,7 @@ public:
 		sep.multScalar(1.5);
 		ali.multScalar(1.0);
 		coh.multScalar(1.0);
-		obs.multScalar(1.0);
+		obs.multScalar(1.6);
 
 		applyForce(sep);
 		applyForce(coh);
