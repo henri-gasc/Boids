@@ -1,13 +1,10 @@
 #pragma once
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <math.h>
-#include "Obstacle.hpp"
+#include "utils.hpp"
 
-class Boid {
+class Boid: public SimuObject {
 public:
-	Vect pos;
-	Vect speed;
-	Vect acceleration;
 	float vision_radius = 50;
 	float distance_boids = 20;
 	float distance_obstacle = 3 * distance_boids;
@@ -18,34 +15,20 @@ public:
 	Config *conf;
 
 	Boid(int pos_x, int pos_y, RandomNumberGenerator *rng, Config* config):
-		pos(pos_x, pos_y),
-		speed(rng->pick()/100, rng->pick()/100),
-		acceleration(0, 0),
+		SimuObject(config),
 		shape(3.f, 3)
 	{
+		pos.set(pos_x, pos_y);
+		speed.set(rng->pick()/100, rng->pick()/100),
 		conf = config;
 	};
 
-	void apply_borders() {
-		if (pos.x < 0) { pos.x += conf->window_height;}
-		else if (pos.x > conf->window_height) { pos.x -= conf->window_height;}
-		if (pos.y < 0) { pos.y += conf->window_width;}
-		else if (pos.y > conf->window_width) { pos.y -= conf->window_width;}
-	}
-
-	float get_angle() {
-		float angle = atan2(speed.x, -speed.y) * 180 / M_PI;
-		return angle;
-	}
-
+	/* We need this despite beeing the same function as in SimuObject
+	   because otherwise there is boid appearing on screen */
 	void update_pos() {
 		apply_borders();
 		shape.setRotation(get_angle());
 		shape.setPosition(pos.x, pos.y);
-	}
-
-	float distance(Vect other_pos) {
-		return sqrt(pow(pos.x - other_pos.x, 2) + pow(pos.y - other_pos.y, 2));
 	}
 
 	void applyForce(Vect force) {
@@ -78,7 +61,7 @@ public:
 		return steering;
 	}
 
-	Vect Alignement(boost::ptr_vector<Boid> all_boids) {
+	Vect Alignement(boost::ptr_vector<SimuObject> all_boids) {
 		Vect avg_speed(0, 0);
 		int count = 0;
 		for (int i = 0; i < (int) all_boids.size(); i++) {
@@ -102,7 +85,7 @@ public:
 		}
 	}
 
-	Vect Cohesion(boost::ptr_vector<Boid> all_boids) {
+	Vect Cohesion(boost::ptr_vector<SimuObject> all_boids) {
 		Vect avg_loc(0, 0);
 		int count = 0;
 		for (int i = 0; i < (int) all_boids.size(); i++) {
@@ -140,7 +123,7 @@ public:
 		return steering;
 	}
 
-	Vect AvoidObstacles(boost::ptr_vector<Obstacle> all_obstacles) {
+	Vect AvoidObstacles(boost::ptr_vector<SimuObject> all_obstacles) {
 		Vect steering(0, 0);
 		int count = 0;
 		for (int i = 0; i < (int) all_obstacles.size(); i++) {
@@ -166,7 +149,7 @@ public:
 		return steering;
 	}
 
-	void update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<Obstacle> all_obstacles) {
+	void update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<SimuObject> all_obstacles) {
 		Vect sep = Separation(all_boids);
 		Vect ali = Alignement(all_boids);
 		Vect coh = Cohesion(all_boids);
@@ -175,7 +158,7 @@ public:
 		sep.multScalar(1.5);
 		ali.multScalar(1.0);
 		coh.multScalar(1.0);
-		obs.multScalar(1.6);
+		obs.multScalar(1.25);
 
 		applyForce(sep);
 		applyForce(coh);

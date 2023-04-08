@@ -72,6 +72,11 @@ public:
 		y = value_y;
 	}
 
+	void set(float value_x, float value_y) {
+		x = value_x;
+		y = value_y;
+	}
+
 	float magnitude() {
 		return sqrt(x*x + y*y);
 	}
@@ -144,5 +149,48 @@ public:
 
 	int range() {
 		return max - min;
+	}
+};
+
+class SimuObject {
+public:
+	Vect pos;
+	Vect speed;
+	Vect acceleration;
+	float r = 5.f;
+	sf::CircleShape shape;
+	Config *conf;
+
+	SimuObject(Config *config):
+		pos(0, 0),
+		speed(0, 0),
+		acceleration(0, 0),
+		shape(2*r)
+	{
+		conf = config;
+		update_pos();
+		shape.setFillColor(sf::Color::Red);
+	}
+
+	void apply_borders() {
+		if (pos.x < 0) { pos.x += conf->window_height;}
+		else if (pos.x > conf->window_height) { pos.x -= conf->window_height;}
+		if (pos.y < 0) { pos.y += conf->window_width;}
+		else if (pos.y > conf->window_width) { pos.y -= conf->window_width;}
+	}
+
+	float get_angle() {
+		float angle = atan2(speed.x, -speed.y) * 180 / M_PI;
+		return angle;
+	}
+
+	void update_pos() {
+		apply_borders();
+		shape.setRotation(get_angle());
+		shape.setPosition(pos.x, pos.y);
+	}
+
+	float distance(Vect other_pos) {
+		return sqrt(pow(pos.x - other_pos.x, 2) + pow(pos.y - other_pos.y, 2));
 	}
 };

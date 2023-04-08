@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
 	}
 
 	boost::ptr_vector<Boid> all_Boids(conf.nbr_boids);
-	boost::ptr_vector<Obstacle> all_Obstacles(conf.nbr_obstacles);
+	boost::ptr_vector<SimuObject> all_Obstacles(conf.nbr_obstacles);
 	Application app(&conf);
 	RandomNumberGenerator rng(-100, 100);
 	RandomNumberGenerator rng_width(0, conf.window_width);
@@ -21,7 +21,9 @@ int main(int argc, char **argv) {
 	}
 
 	for (int i = 0; i < conf.nbr_obstacles; i++) {
-		Obstacle *obst = new Obstacle(&rng_width, &rng_height);
+		SimuObject *obst = new SimuObject(&conf);
+		obst->pos.set(rng_width.pick(), rng_height.pick());
+		obst->update_pos();
 		app.draw(obst->shape);
 		all_Obstacles.push_back(obst);
 	}
