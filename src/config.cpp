@@ -2,7 +2,8 @@
 #include <getopt.h>
 #include <bits/getopt_ext.h>
 
-void printHelp(Config default_config) {
+void printHelp() {
+	Config default_config;
 	printf("usage: boids [options]\n\n");
 	printf("options:\n");
 	printf("  -h, --help              Show this help\n\n");
@@ -12,6 +13,13 @@ void printHelp(Config default_config) {
 	printf("  -o, --obstacles N       Choose the number of obstacles [default=%4i]\n", default_config.nbr_obstacles);
 }
 
+/**
+ * @brief Make sure the argument is a number greater than 1
+ * 
+ * @param integer_to_convert The string to convert to int
+ * @param option_name The name of the option (used when errors)
+ * @return The number converted
+ */
 int verify(char *integer_to_convert, const char option_name[]) {
 	int tmp = strtold(integer_to_convert, NULL);
 	if (tmp > 0) {
@@ -22,7 +30,6 @@ int verify(char *integer_to_convert, const char option_name[]) {
 }
 
 Config handle_arguments(int argc, char **argv) {
-	Config def;
 	Config conf;
 	int option_index = 0;
 	int c;
@@ -45,7 +52,7 @@ Config handle_arguments(int argc, char **argv) {
 			break;
 
 		case 'h':
-			printHelp(def);
+			printHelp();
 			exit(0);
 		case 's':
 			conf.save_to_file = true;
@@ -56,7 +63,7 @@ Config handle_arguments(int argc, char **argv) {
 			break;
 
 		case '?':
-			printHelp(def);
+			printHelp();
 			exit(1);
 		}
 	}

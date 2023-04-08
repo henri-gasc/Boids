@@ -1,6 +1,6 @@
 #pragma once
+
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <math.h>
 #include "utils.hpp"
 
 class Boid: public SimuObject {
@@ -31,10 +31,21 @@ public:
 		shape.setPosition(pos.x, pos.y);
 	}
 
+	/**
+	 * @brief Apply the force to the boid
+	 * 
+	 * @param force The force to apply to acceleration
+	 */
 	void applyForce(Vect force) {
 	    acceleration.addVect(force);
 	}
 
+	/**
+	 * @brief The Separation rule (keep the boids separate)
+	 * 
+	 * @param all_boids The vector containing all Boid objects
+	 * @return The force needed
+	 */
 	Vect Separation(boost::ptr_vector<Boid> all_boids) {
 		Vect steering(0, 0);
 		int count = 0;
@@ -61,6 +72,12 @@ public:
 		return steering;
 	}
 
+	/**
+	 * @brief The Alignment rule (put the boids in the same direction)
+	 * 
+	 * @param all_boids The vector containing all Boid objects
+	 * @return The force needed
+	 */
 	Vect Alignement(boost::ptr_vector<SimuObject> all_boids) {
 		Vect avg_speed(0, 0);
 		int count = 0;
@@ -85,6 +102,12 @@ public:
 		}
 	}
 
+	/**
+	 * @brief The Cohesion rule (keep the boids close)
+	 * 
+	 * @param all_boids The vector containing all Boid objects
+	 * @return The force needed
+	 */
 	Vect Cohesion(boost::ptr_vector<SimuObject> all_boids) {
 		Vect avg_loc(0, 0);
 		int count = 0;
@@ -111,6 +134,11 @@ public:
 		}
 	}
 
+	/**
+	 * @brief Not working for now
+	 * 
+	 * @return The force needed
+	 */
 	Vect AvoidVerticalBorders() {
 		Vect steering(0, 0);
 		if ((pos.x > conf->window_height - border) || (pos.x < border)) {
@@ -123,6 +151,12 @@ public:
 		return steering;
 	}
 
+	/**
+	 * @brief Make it so the boid avoid the obstacles
+	 * 
+	 * @param all_obstacles The vector containing all obstacles
+	 * @return The force needed to avoid them
+	 */
 	Vect AvoidObstacles(boost::ptr_vector<SimuObject> all_obstacles) {
 		Vect steering(0, 0);
 		int count = 0;
@@ -149,6 +183,12 @@ public:
 		return steering;
 	}
 
+	/**
+	 * @brief Compute the forces for the rules, scale them, apply them, update the position
+	 * 
+	 * @param all_boids The vector containing all Boid objects
+	 * @param all_obstacles The force needed to avoid them
+	 */
 	void update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<SimuObject> all_obstacles) {
 		Vect sep = Separation(all_boids);
 		Vect ali = Alignement(all_boids);
