@@ -4,7 +4,6 @@ project(${PROJECT_NAME} VERSION 1.0.0 LANGUAGES CXX)
 
 file(GLOB_RECURSE source_files
 	"src/*.cpp"
-	"include/*.hpp"
 )
 
 set(SOURCES ${source_files})

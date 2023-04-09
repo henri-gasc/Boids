@@ -12,8 +12,8 @@ int main(int argc, char **argv) {
 	boost::ptr_vector<SimuObject> all_Obstacles(conf.nbr_obstacles);
 	Application app(&conf);
 	RandomNumberGenerator rng(-100, 100);
-	RandomNumberGenerator rng_width(0, conf.window_width);
-	RandomNumberGenerator rng_height(0, conf.window_height);
+	RandomNumberGenerator rng_width(10, conf.window_width-10);
+	RandomNumberGenerator rng_height(10, conf.window_height-10);
 
 	for (int i = 0; i < conf.nbr_boids; i++) {
 		Boid *boid = new Boid(conf.window_height/2, conf.window_width/2, &rng, &conf);

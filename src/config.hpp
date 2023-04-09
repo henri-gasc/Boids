@@ -4,6 +4,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <math.h>
+#include <getopt.h>
+#include <bits/getopt_ext.h>
 
 /**
  * @brief The class with the config in it

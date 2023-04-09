@@ -1,6 +1,4 @@
 #include "config.hpp"
-#include <getopt.h>
-#include <bits/getopt_ext.h>
 
 void printHelp() {
 	Config default_config;
