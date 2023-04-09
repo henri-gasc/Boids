@@ -40,7 +40,7 @@ public:
 	 * @param all_boids The vector containing all Boid objects
 	 * @return The force needed
 	 */
-	Vect Separation(boost::ptr_vector<Boid> all_boids);
+	Vect Separation(boost::ptr_vector<Boid> *all_boids);
 
 	/**
 	 * @brief The Alignment rule (put the boids in the same direction)
@@ -48,7 +48,7 @@ public:
 	 * @param all_boids The vector containing all Boid objects
 	 * @return The force needed
 	 */
-	Vect Alignement(boost::ptr_vector<SimuObject> all_boids);
+	Vect Alignement(boost::ptr_vector<Boid> *all_boids);
 
 	/**
 	 * @brief The Cohesion rule (keep the boids close)
@@ -56,7 +56,7 @@ public:
 	 * @param all_boids The vector containing all Boid objects
 	 * @return The force needed
 	 */
-	Vect Cohesion(boost::ptr_vector<SimuObject> all_boids);
+	Vect Cohesion(boost::ptr_vector<Boid> *all_boids);
 
 	/**
 	 * @brief Not working for now
@@ -71,7 +71,7 @@ public:
 	 * @param all_obstacles The vector containing all obstacles
 	 * @return The force needed to avoid them
 	 */
-	Vect AvoidObstacles(boost::ptr_vector<SimuObject> all_obstacles);
+	Vect AvoidObstacles(boost::ptr_vector<SimuObject> *all_obstacles);
 
 	/**
 	 * @brief Compute the forces for the rules, scale them, apply them, update the position
@@ -79,5 +79,5 @@ public:
 	 * @param all_boids The vector containing all Boid objects
 	 * @param all_obstacles The force needed to avoid them
 	 */
-	void update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<SimuObject> all_obstacles);
+	void update(boost::ptr_vector<Boid> *all_boids, boost::ptr_vector<SimuObject> *all_obstacles);
 };

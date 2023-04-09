@@ -1,5 +1,17 @@
 #include "Boids.hpp"
+#include "threads.hpp"
+#include "utils.hpp"
 #include <filesystem>
+
+void update_boid(const int i, boost::ptr_vector<Boid> *boids, boost::ptr_vector<SimuObject> *obstacles, Application *app) {
+	Boid boid = boids->at(i);
+	boid.update(boids, obstacles);
+	app->draw(boid.shape);
+	boids->at(i) = boid;
+	// if (i == 0) {
+	// 	printf("%f\n", boid.pos.x);
+	// }
+}
 
 int main(int argc, char **argv) {
 	Config conf = handle_arguments(argc, argv);
@@ -12,8 +24,9 @@ int main(int argc, char **argv) {
 	boost::ptr_vector<SimuObject> all_Obstacles(conf.nbr_obstacles);
 	Application app(&conf);
 	RandomNumberGenerator rng(-100, 100);
-	RandomNumberGenerator rng_width(10, conf.window_width-10);
-	RandomNumberGenerator rng_height(10, conf.window_height-10);
+	RandomNumberGenerator rng_width(25, conf.window_width-25);
+	RandomNumberGenerator rng_height(25, conf.window_height-25);
+	ThreadPool thread_pool(conf.nbr_threads);
 
 	for (int i = 0; i < conf.nbr_boids; i++) {
 		Boid *boid = new Boid(conf.window_width/2, conf.window_height/2, &rng, &conf);
@@ -34,13 +47,14 @@ int main(int argc, char **argv) {
 	app.save(counter);
 	while (app.isRunning()) {
 		for (int i = 0; i < conf.nbr_boids; i++) {
-			Boid boid = all_Boids[i];
-			boid.update(all_Boids, all_Obstacles);
-			app.draw(boid.shape);
-			all_Boids[i] = boid;
-			// if (i == 0) {
-			// 	printf("%f\n", boid.pos.x);
-			// }
+			all_Boids.at(i).update(&all_Boids, &all_Obstacles);
+			// thread_pool.addTask([i, &all_Boids, &all_Obstacles] {
+			// 	all_Boids.at(i).update(&all_Boids, &all_Obstacles);
+			// });
+		}
+		thread_pool.waitForCompletion();
+		for (int i = 0; i < conf.nbr_boids; i++) {
+			app.draw(all_Boids.at(i).shape);
 		}
 		for (int i = 0; i < conf.nbr_obstacles; i++) {
 			app.draw(all_Obstacles[i].shape);

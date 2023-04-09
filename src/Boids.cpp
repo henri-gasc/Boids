@@ -13,14 +13,14 @@ void Boid::applyForce(Vect force) {
 	acceleration.addVect(force);
 }
 
-Vect Boid::Separation(boost::ptr_vector<Boid> all_boids) {
+Vect Boid::Separation(boost::ptr_vector<Boid> *all_boids) {
 	Vect steering(0, 0);
 	int count = 0;
-	for (int i = 0; i < (int) all_boids.size(); i++) {
-		float d = distance(all_boids[i].pos);
+	for (int i = 0; i < (int) all_boids->size(); i++) {
+		float d = distance(all_boids->at(i).pos);
 		if ((d > 0) && (d < distance_boids)) {
 			Vect diff(0, 0);
-			diff = diff.subTwo(pos, all_boids[i].pos);
+			diff = diff.subTwo(pos, all_boids->at(i).pos);
 			diff.normalize();
 			diff.divScalar(d);
 			steering.addVect(diff);
@@ -39,13 +39,13 @@ Vect Boid::Separation(boost::ptr_vector<Boid> all_boids) {
 	return steering;
 }
 
-Vect Boid::Alignement(boost::ptr_vector<SimuObject> all_boids) {
+Vect Boid::Alignement(boost::ptr_vector<Boid> *all_boids) {
 	Vect avg_speed(0, 0);
 	int count = 0;
-	for (int i = 0; i < (int) all_boids.size(); i++) {
-		float d = distance(all_boids[i].pos);
+	for (int i = 0; i < (int) all_boids->size(); i++) {
+		float d = distance(all_boids->at(i).pos);
 		if ((d > 0) && (d < vision_radius)) {
-			avg_speed.addVect(all_boids[i].speed);
+			avg_speed.addVect(all_boids->at(i).speed);
 			count++;
 		}
 	}
@@ -63,13 +63,13 @@ Vect Boid::Alignement(boost::ptr_vector<SimuObject> all_boids) {
 	}
 }
 
-Vect Boid::Cohesion(boost::ptr_vector<SimuObject> all_boids) {
+Vect Boid::Cohesion(boost::ptr_vector<Boid> *all_boids) {
 	Vect avg_loc(0, 0);
 	int count = 0;
-	for (int i = 0; i < (int) all_boids.size(); i++) {
-		float d = distance(all_boids[i].pos);
+	for (int i = 0; i < (int) all_boids->size(); i++) {
+		float d = distance(all_boids->at(i).pos);
 		if ((d > 0) && (d < vision_radius)) {
-			avg_loc.addVect(all_boids[i].pos);
+			avg_loc.addVect(all_boids->at(i).pos);
 			count++;
 		}
 	}
@@ -89,14 +89,14 @@ Vect Boid::Cohesion(boost::ptr_vector<SimuObject> all_boids) {
 	}
 }
 
-Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> all_obstacles) {
+Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> *all_obstacles) {
 	Vect steering(0, 0);
 	int count = 0;
-	for (int i = 0; i < (int) all_obstacles.size(); i++) {
-		float d = distance(all_obstacles[i].pos);
+	for (int i = 0; i < (int) all_obstacles->size(); i++) {
+		float d = distance(all_obstacles->at(i).pos);
 		if ((d > 0) && (d < distance_obstacle)) {
 			Vect diff(0, 0);
-			diff = diff.subTwo(pos, all_obstacles[i].pos);
+			diff = diff.subTwo(pos, all_obstacles->at(i).pos);
 			diff.normalize();
 			diff.divScalar(d*d*d);
 			steering.addVect(diff);
@@ -136,7 +136,7 @@ Vect Boid::AvoidVerticalBorders() {
 	return steering;
 }
 
-void Boid::update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<SimuObject> all_obstacles) {
+void Boid::update(boost::ptr_vector<Boid> *all_boids, boost::ptr_vector<SimuObject> *all_obstacles) {
 	// Separation
 	if (conf->rules & 1) {
 		Vect sep = Separation(all_boids);
