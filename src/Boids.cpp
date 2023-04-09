@@ -137,23 +137,40 @@ Vect Boid::AvoidVerticalBorders() {
 }
 
 void Boid::update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<SimuObject> all_obstacles) {
-	Vect sep = Separation(all_boids);
-	Vect ali = Alignement(all_boids);
-	Vect coh = Cohesion(all_boids);
-	Vect obs = AvoidObstacles(all_obstacles);
-	Vect bor = AvoidVerticalBorders();
+	// Separation
+	if (conf->rules & 1) {
+		Vect sep = Separation(all_boids);
+		sep.multScalar(1.5);
+		applyForce(sep);
+	}
 
-	sep.multScalar(1.5);
-	ali.multScalar(1.0);
-	coh.multScalar(1.0);
-	obs.multScalar(1.25);
-	bor.multScalar(1.0);
+	// Aligment
+	if (conf->rules & 2) {
+		Vect ali = Alignement(all_boids);
+		ali.multScalar(1.0);
+		applyForce(ali);
+	}
 
-	applyForce(sep);
-	applyForce(coh);
-	applyForce(ali);
-	applyForce(obs);
-	applyForce(bor);
+	// Cohesion
+	if (conf->rules & 4) {
+		Vect coh = Cohesion(all_boids);
+		coh.multScalar(1.0);
+		applyForce(coh);
+	}
+
+	// Obstacles
+	if (conf->rules & 8) {
+		Vect obs = AvoidObstacles(all_obstacles);
+		obs.multScalar(1.25);
+		applyForce(obs);
+	}
+
+	// Borders
+	if (conf->rules & 16) {
+		Vect bor = AvoidVerticalBorders();
+		bor.multScalar(1.0);
+		applyForce(bor);
+	}
 
 	acceleration.multScalar(.4);
 	speed.addVect(acceleration);

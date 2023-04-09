@@ -2,13 +2,27 @@
 
 void printHelp() {
 	Config default_config;
-	printf("usage: boids [options]\n\n");
+	printf("usage: boids [options]\n");
+	printf("\n");
 	printf("options:\n");
-	printf("  -h, --help              Show this help\n\n");
+	printf("  -h, --help              Show this help\n");
+	printf("\n");
 	printf("  -n, --no-show           If set, will not show the simulation (but can still save)\n");
-	printf("  -s, --save              If set, will save the simulations\n\n");
-	printf("  -b, --boids     N       Choose the number of boids     [default=%4i]\n", default_config.nbr_boids);
-	printf("  -o, --obstacles N       Choose the number of obstacles [default=%4i]\n", default_config.nbr_obstacles);
+	printf("  -s, --save              If set, will save the simulations\n");
+	printf("\n");
+	printf("  -b, --boids     N       Choose the number of boids     [%4i]\n", default_config.nbr_boids);
+	printf("  -o, --obstacles N       Choose the number of obstacles [%4i]\n", default_config.nbr_obstacles);
+	printf("  -r, --rules     N       Choose the rules to activate   [%4i (all)]\n", default_config.rules);
+	printf("        +1 separation, +2 aligment, +4 cohesion, +8 obstacles, +16 borders\n");
+}
+
+int R1ITE0(const bool cond) {
+	if (cond) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
 }
 
 /**
@@ -38,15 +52,24 @@ Config handle_arguments(int argc, char **argv) {
 		{"no-show", no_argument, NULL, 'n'},
 		{"boids", required_argument, NULL, 'b'},
 		{"obstacles", required_argument, NULL, 'O'},
+		{"rules", required_argument, NULL, 'r'},
 	};
 
-	while ((c = getopt_long(argc, argv, "hsnb:O:", long_options, &option_index)) != -1) {
+	while ((c = getopt_long(argc, argv, "hsnb:O:r:", long_options, &option_index)) != -1) {
 		switch (c) {
 		case 'b':
 			conf.nbr_boids = verify(optarg, "--boids");
 			break;
 		case 'O':
 			conf.nbr_obstacles = verify(optarg, "--obstacles");
+			break;
+		case 'r':
+			conf.rules = strtold(optarg, NULL);
+			printf("Separation: %i\n", R1ITE0(conf.rules & 1));
+			printf("Aligment:   %i\n", R1ITE0(conf.rules & 2));
+			printf("Cohesion:   %i\n", R1ITE0(conf.rules & 4));
+			printf("Obstacles:  %i\n", R1ITE0(conf.rules & 8));
+			printf("Borders:    %i\n", R1ITE0(conf.rules & 16));
 			break;
 
 		case 'h':

@@ -18,6 +18,8 @@ public:
 	int framerate = 40;
 	int nbr_boids = 200;
 	int nbr_obstacles = 0;
+	int nbr_rules = 5;
+	int rules = 0b11111; // See help
 	bool save_to_file = false;
 	bool show_simulations = true;
 };
