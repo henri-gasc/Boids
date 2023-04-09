@@ -1,4 +1,5 @@
 #include "Boids.hpp"
+#include <cmath>
 
 /* We need this despite beeing the same function as in SimuObject
 	because otherwise there is boid appearing on screen */
@@ -88,25 +89,6 @@ Vect Boid::Cohesion(boost::ptr_vector<SimuObject> all_boids) {
 	}
 }
 
-Vect Boid::AvoidVerticalBorders() {
-	Vect steering(0, 0);
-	float d = 0;
-	if ((pos.x > conf->window_height - border) || (pos.x < border)) {
-		Vect diff(0, 0);
-		if (pos.x > conf->window_height - border) {
-			d = conf->window_height - pos.x;
-		}
-		else {
-			d = pos.x;
-		}
-		diff.x = d;
-		diff.normalize();
-		diff.divScalar(d);
-		steering.addVect(diff);
-	}
-	return steering;
-}
-
 Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> all_obstacles) {
 	Vect steering(0, 0);
 	int count = 0;
@@ -130,6 +112,27 @@ Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> all_obstacles) {
 		steering.subVect(speed);
 		steering.limit(max_force);
 	}
+	return steering;
+}
+
+Vect Boid::AvoidVerticalBorders() {
+	Vect steering(0, 0);
+	float x = 0;
+	float y = 0;
+	if (pos.x > conf->window_width - border) {
+		x = - conf->window_width - pos.x;
+	}
+	else if (pos.x < border) {
+		x = pos.x;
+	}
+	if (pos.y > conf->window_height - border) {
+		y = - conf->window_height - pos.y;
+	}
+	else if (pos.y < border) {
+		y = pos.y;
+	}
+	steering.set(x, y);
+	steering.limit(4*max_force);
 	return steering;
 }
 

@@ -10,7 +10,7 @@ public:
 	float distance_obstacle = 3 * distance_boids;
 	float max_speed = 3.5;
 	float max_force = 0.5;
-	float border = 50;
+	float border = 100;
 	sf::CircleShape shape;
 	Config *conf;
 
