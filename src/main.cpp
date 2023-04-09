@@ -16,9 +16,11 @@ int main(int argc, char **argv) {
 	RandomNumberGenerator rng_height(10, conf.window_height-10);
 
 	for (int i = 0; i < conf.nbr_boids; i++) {
-		Boid *boid = new Boid(conf.window_height/2, conf.window_width/2, &rng, &conf);
+		Boid *boid = new Boid(conf.window_width/2, conf.window_height/2, &rng, &conf);
 		all_Boids.push_back(boid);
 	}
+	// all_Boids[0].shape.setRadius(5.f);
+	// all_Boids[0].shape.setFillColor(sf::Color::Red);
 
 	for (int i = 0; i < conf.nbr_obstacles; i++) {
 		SimuObject *obst = new SimuObject(&conf);
@@ -36,6 +38,9 @@ int main(int argc, char **argv) {
 			boid.update(all_Boids, all_Obstacles);
 			app.draw(boid.shape);
 			all_Boids[i] = boid;
+			// if (i == 0) {
+			// 	printf("%f\n", boid.pos.x);
+			// }
 		}
 		for (int i = 0; i < conf.nbr_obstacles; i++) {
 			app.draw(all_Obstacles[i].shape);

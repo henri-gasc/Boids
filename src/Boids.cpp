@@ -90,12 +90,19 @@ Vect Boid::Cohesion(boost::ptr_vector<SimuObject> all_boids) {
 
 Vect Boid::AvoidVerticalBorders() {
 	Vect steering(0, 0);
+	float d = 0;
 	if ((pos.x > conf->window_height - border) || (pos.x < border)) {
-		float angle = get_angle();
-		if (abs(angle) >= 90) {
-			steering.x = angle*0.2;
-			steering.y = 0;
+		Vect diff(0, 0);
+		if (pos.x > conf->window_height - border) {
+			d = conf->window_height - pos.x;
 		}
+		else {
+			d = pos.x;
+		}
+		diff.x = d;
+		diff.normalize();
+		diff.divScalar(d);
+		steering.addVect(diff);
 	}
 	return steering;
 }
@@ -131,16 +138,19 @@ void Boid::update(boost::ptr_vector<Boid> all_boids, boost::ptr_vector<SimuObjec
 	Vect ali = Alignement(all_boids);
 	Vect coh = Cohesion(all_boids);
 	Vect obs = AvoidObstacles(all_obstacles);
+	Vect bor = AvoidVerticalBorders();
 
 	sep.multScalar(1.5);
 	ali.multScalar(1.0);
 	coh.multScalar(1.0);
 	obs.multScalar(1.25);
+	bor.multScalar(1.0);
 
 	applyForce(sep);
 	applyForce(coh);
 	applyForce(ali);
 	applyForce(obs);
+	applyForce(bor);
 
 	acceleration.multScalar(.4);
 	speed.addVect(acceleration);

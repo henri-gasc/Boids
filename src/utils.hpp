@@ -16,11 +16,11 @@ public:
 	Config *conf;
 
 	Application(Config *config):
-		window(sf::VideoMode(config->window_height, config->window_width), "SFML", sf::Style::Default)
+		window(sf::VideoMode(config->window_width, config->window_height), "SFML", sf::Style::Default)
 	{
 		conf = config;
 		if (conf->save_to_file) {
-			texture.create(conf->window_height, conf->window_width);
+			texture.create(conf->window_width, conf->window_height);
 		}
 		window.setFramerateLimit(conf->framerate);
 	}
@@ -269,10 +269,10 @@ public:
 	 * 
 	 */
 	void apply_borders() {
-		if (pos.x < 0) { pos.x += conf->window_height;}
-		else if (pos.x > conf->window_height) { pos.x -= conf->window_height;}
-		if (pos.y < 0) { pos.y += conf->window_width;}
-		else if (pos.y > conf->window_width) { pos.y -= conf->window_width;}
+		if (pos.x < 0) { pos.x += conf->window_width;}
+		else if (pos.x > conf->window_width) { pos.x -= conf->window_width;}
+		if (pos.y < 0) { pos.y += conf->window_height;}
+		else if (pos.y > conf->window_height) { pos.y -= conf->window_height;}
 	}
 
 	/**

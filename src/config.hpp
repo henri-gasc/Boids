@@ -13,8 +13,8 @@
  */
 class Config {
 public:
-	int window_height = 1500;
-	int window_width = 1000;
+	int window_width = 1500;
+	int window_height = 1000;
 	int framerate = 40;
 	int nbr_boids = 200;
 	int nbr_obstacles = 0;
