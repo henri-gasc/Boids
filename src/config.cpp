@@ -11,7 +11,7 @@ void printHelp() {
 	printf("  -s, --save              If set, will save the simulations\n");
 	printf("\n");
 	printf("  -b, --boids     N       Choose the number of boids     [%4i]\n", default_config.nbr_boids);
-	printf("  -o, --obstacles N       Choose the number of obstacles [%4i]\n", default_config.nbr_obstacles);
+	printf("  -O, --obstacles N       Choose the number of obstacles [%4i]\n", default_config.nbr_obstacles);
 	printf("  -r, --rules     N       Choose the rules to activate   [%4i (all)]\n", default_config.rules);
 	printf("        +1 separation, +2 aligment, +4 cohesion, +8 obstacles, +16 borders\n");
 }
