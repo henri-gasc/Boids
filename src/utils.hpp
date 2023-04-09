@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/Window/Mouse.hpp>
+#include <cstdio>
 #include <random>
 #include "config.hpp"
 
@@ -76,11 +78,14 @@ public:
 	 */
 	void save(int number) {
 		if (not conf->save_to_file) return;
-		char name[100] = "images/part.";
+		char name[100] = "";
+		strcat(name, conf->save_dir.c_str());
+		strcat(name, "/part.");
 		char format[6] = ".%05i";
 		sprintf(strstr(name, "."), format, number);
 		strcat(name, ".png");
 		texture.getTexture().copyToImage().saveToFile(name);
+		printf("Saved frame %i\n", number);
 	}
 };
 
@@ -292,7 +297,7 @@ public:
 	void update_pos() {
 		apply_borders();
 		shape.setRotation(get_angle());
-		shape.setPosition(pos.x, pos.y);
+		shape.setPosition(pos.x-r, pos.y-r);
 	}
 
 	/**

@@ -6,6 +6,7 @@
 #include <math.h>
 #include <getopt.h>
 #include <bits/getopt_ext.h>
+#include <string>
 
 /**
  * @brief The class with the config in it
@@ -22,6 +23,7 @@ public:
 	int rules = 0b11111; // See help
 	bool save_to_file = false;
 	bool show_simulations = true;
+	std::string save_dir = "images";
 };
 
 /**

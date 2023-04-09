@@ -5,7 +5,7 @@ int main(int argc, char **argv) {
 	Config conf = handle_arguments(argc, argv);
 
 	if (conf.save_to_file) {
-		std::filesystem::create_directories("./images");
+		std::filesystem::create_directories(conf.save_dir);
 	}
 
 	boost::ptr_vector<Boid> all_Boids(conf.nbr_boids);
