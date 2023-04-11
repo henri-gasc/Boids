@@ -4,6 +4,7 @@
 #include <SFML/Window.hpp>
 #include <SFML/Window/Mouse.hpp>
 #include <cstdio>
+#include <cstdlib>
 #include <random>
 #include "config.hpp"
 
@@ -107,6 +108,11 @@ public:
 	void set(float value_x, float value_y) {
 		x = value_x;
 		y = value_y;
+	}
+
+	void setVect(Vect v) {
+		x = v.x;
+		y = v.y;
 	}
 
 	/**
@@ -254,6 +260,8 @@ public:
 	Vect pos;
 	Vect speed;
 	Vect acceleration;
+	Vect grid;
+	float vision_radius = 50;
 	float r = 5.f;
 	sf::CircleShape shape;
 	Config *conf;
@@ -262,6 +270,7 @@ public:
 		pos(0, 0),
 		speed(0, 0),
 		acceleration(0, 0),
+		grid(0, 0),
 		shape(2*r)
 	{
 		conf = config;
@@ -298,6 +307,8 @@ public:
 		apply_borders();
 		shape.setRotation(get_angle());
 		shape.setPosition(pos.x-r, pos.y-r);
+		grid.x = (int) pos.x/vision_radius;
+		grid.y = (int) pos.y/vision_radius;
 	}
 
 	/**

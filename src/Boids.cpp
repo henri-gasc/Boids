@@ -1,5 +1,4 @@
 #include "Boids.hpp"
-#include <cmath>
 
 /* We need this despite beeing the same function as in SimuObject
 	because otherwise there is boid appearing on screen */
@@ -7,6 +6,8 @@ void Boid::update_pos() {
 	apply_borders();
 	shape.setRotation(get_angle());
 	shape.setPosition(pos.x, pos.y);
+	grid.x = (int) pos.x/vision_radius;
+	grid.y = (int) pos.y/vision_radius;
 }
 
 void Boid::applyForce(Vect force) {
@@ -49,22 +50,23 @@ Vect Boid::Alignement(boost::ptr_vector<Boid> *all_boids) {
 			count++;
 		}
 	}
+	Vect steering(0, 0);
 	if (count > 0) {
 		avg_speed.divScalar(count);
 		avg_speed.normalize();
 		avg_speed.multScalar(max_speed);
-		Vect steering(0, 0);
 		steering  = steering.subTwo(avg_speed, speed);
 		steering.limit(max_force);
 		return steering;
 	}
 	else {
-		return avg_speed;
+		return steering;
 	}
 }
 
 Vect Boid::Cohesion(boost::ptr_vector<Boid> *all_boids) {
 	Vect avg_loc(0, 0);
+	Vect want(0, 0);
 	int count = 0;
 	for (int i = 0; i < (int) all_boids->size(); i++) {
 		float d = distance(all_boids->at(i).pos);
@@ -74,19 +76,14 @@ Vect Boid::Cohesion(boost::ptr_vector<Boid> *all_boids) {
 		}
 	}
 	if (count > 0) {
-		Vect desire(0, 0);
 		avg_loc.divScalar(count);
-		desire.subVect(avg_loc);
-		desire.normalize();
-		desire.multScalar(max_speed);
-		acceleration.subTwo(desire, speed);
-		acceleration.limit(max_force);
-		return acceleration;
+		want.subTwo(avg_loc, pos);
+		want.normalize();
+		want.multScalar(max_speed);
+		want.subVect(speed);
+		want.limit(max_force);
 	}
-	else {
-		Vect tmp(0, 0);
-		return tmp;
-	}
+	return want;
 }
 
 Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> *all_obstacles) {
@@ -137,21 +134,22 @@ Vect Boid::AvoidVerticalBorders() {
 }
 
 void Boid::update(boost::ptr_vector<Boid> *all_boids, boost::ptr_vector<SimuObject> *all_obstacles) {
-	// Separation
+
+	// Separation, Aligment, and Cohesion
+	// applyForce(rulesBoid(all_boids));
+
 	if (conf->rules & 1) {
 		Vect sep = Separation(all_boids);
 		sep.multScalar(1.5);
 		applyForce(sep);
 	}
 
-	// Aligment
 	if (conf->rules & 2) {
 		Vect ali = Alignement(all_boids);
 		ali.multScalar(1.0);
 		applyForce(ali);
 	}
 
-	// Cohesion
 	if (conf->rules & 4) {
 		Vect coh = Cohesion(all_boids);
 		coh.multScalar(1.0);

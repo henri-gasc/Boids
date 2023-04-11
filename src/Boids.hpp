@@ -5,7 +5,6 @@
 
 class Boid: public SimuObject {
 public:
-	float vision_radius = 50;
 	float distance_boids = 20;
 	float distance_obstacle = 3 * distance_boids;
 	float max_speed = 3.5;
@@ -18,7 +17,7 @@ public:
 		SimuObject(config),
 		shape(3.f, 3)
 	{
-		pos.set(pos_x, pos_y);
+		pos.set(pos_x + rng->pick(), pos_y + rng->pick());
 		speed.set(rng->pick()/100, rng->pick()/100),
 		conf = config;
 	};
@@ -33,6 +32,15 @@ public:
 	 * @param force The force to apply to acceleration
 	 */
 	void applyForce(Vect force);
+
+	/**
+	 * @brief All boids-on-boids rules
+	 * 
+	 * @param all_boids The vector containing all Boid objects
+	 * @return The force needed
+	 */
+	Vect rulesBoid(boost::ptr_vector<Boid> *all_boids);
+	// To view all rules as separate function, view 5e56d37
 
 	/**
 	 * @brief The Separation rule (keep the boids separate)
