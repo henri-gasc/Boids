@@ -40,31 +40,7 @@ public:
 	 * @return The force needed
 	 */
 	Vect rulesBoid(boost::ptr_vector<Boid> *all_boids);
-	// To view all rules as separate function, view 5e56d37
-
-	/**
-	 * @brief The Separation rule (keep the boids separate)
-	 * 
-	 * @param all_boids The vector containing all Boid objects
-	 * @return The force needed
-	 */
-	Vect Separation(boost::ptr_vector<Boid> *all_boids);
-
-	/**
-	 * @brief The Alignment rule (put the boids in the same direction)
-	 * 
-	 * @param all_boids The vector containing all Boid objects
-	 * @return The force needed
-	 */
-	Vect Alignement(boost::ptr_vector<Boid> *all_boids);
-
-	/**
-	 * @brief The Cohesion rule (keep the boids close)
-	 * 
-	 * @param all_boids The vector containing all Boid objects
-	 * @return The force needed
-	 */
-	Vect Cohesion(boost::ptr_vector<Boid> *all_boids);
+	// To view all rules as separate function, view cb9a4aa
 
 	/**
 	 * @brief Not working for now

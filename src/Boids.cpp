@@ -14,76 +14,67 @@ void Boid::applyForce(Vect force) {
 	acceleration.addVect(force);
 }
 
-Vect Boid::Separation(boost::ptr_vector<Boid> *all_boids) {
-	Vect steering(0, 0);
-	int count = 0;
+Vect Boid::rulesBoid(boost::ptr_vector<Boid> *all_boids) {
+	Vect sep(0, 0); // Separation
+	Vect ali(0, 0); // Alignement
+	Vect coh(0, 0); // Cohesion
+
+	Vect avg_speed(0, 0);
+	Vect avg_locat(0, 0);
+	int count_sep = 0;
+	int count_ali_coh = 0;
 	for (int i = 0; i < (int) all_boids->size(); i++) {
 		float d = distance(all_boids->at(i).pos);
-		if ((d > 0) && (d < distance_boids)) {
+		if (d <= 0) { continue; }
+		if ((d < distance_boids) && (conf->rules & 1)) {
 			Vect diff(0, 0);
 			diff = diff.subTwo(pos, all_boids->at(i).pos);
 			diff.normalize();
 			diff.divScalar(d);
-			steering.addVect(diff);
-			count++;
+			sep.addVect(diff);
+			count_sep++;
 		}
-	}
-	if (count > 0) {
-		steering.divScalar(count);
-	}
-	if (steering.magnitude() > 0) {
-		steering.normalize();
-		steering.multScalar(max_speed);
-		steering.subVect(speed);
-		steering.limit(max_force);
-	}
-	return steering;
-}
-
-Vect Boid::Alignement(boost::ptr_vector<Boid> *all_boids) {
-	Vect avg_speed(0, 0);
-	int count = 0;
-	for (int i = 0; i < (int) all_boids->size(); i++) {
-		float d = distance(all_boids->at(i).pos);
-		if ((d > 0) && (d < vision_radius)) {
+		if (d < vision_radius) {
 			avg_speed.addVect(all_boids->at(i).speed);
-			count++;
+			avg_locat.addVect(all_boids->at(i).pos);
+			count_ali_coh++;
 		}
 	}
-	Vect steering(0, 0);
-	if (count > 0) {
-		avg_speed.divScalar(count);
-		avg_speed.normalize();
-		avg_speed.multScalar(max_speed);
-		steering  = steering.subTwo(avg_speed, speed);
-		steering.limit(max_force);
-		return steering;
-	}
-	else {
-		return steering;
-	}
-}
 
-Vect Boid::Cohesion(boost::ptr_vector<Boid> *all_boids) {
-	Vect avg_loc(0, 0);
-	Vect want(0, 0);
-	int count = 0;
-	for (int i = 0; i < (int) all_boids->size(); i++) {
-		float d = distance(all_boids->at(i).pos);
-		if ((d > 0) && (d < vision_radius)) {
-			avg_loc.addVect(all_boids->at(i).pos);
-			count++;
+	ali.setVect(avg_speed);
+
+	if ((count_sep > 0) && (conf->rules & 1)) {
+		sep.divScalar(count_sep);
+		sep.normalize();
+		sep.multScalar(max_speed);
+		sep.subVect(speed);
+		sep.limit(max_force);	
+		}
+	if (count_ali_coh > 0) {
+		if (conf->rules & 2) {
+			avg_speed.divScalar(count_ali_coh);
+			avg_speed.normalize();
+			avg_speed.multScalar(max_speed);
+			ali = ali.subTwo(avg_speed, speed);
+			ali.limit(max_force);
+		}
+		if (conf->rules & 4) {
+			avg_locat.divScalar(count_ali_coh);
+			coh.subTwo(avg_locat, pos);
+			coh.normalize();
+			coh.multScalar(max_speed);
+			coh.subVect(speed);
+			coh.limit(max_force);
 		}
 	}
-	if (count > 0) {
-		avg_loc.divScalar(count);
-		want.subTwo(avg_loc, pos);
-		want.normalize();
-		want.multScalar(max_speed);
-		want.subVect(speed);
-		want.limit(max_force);
-	}
-	return want;
+	Vect sum(0, 0);
+	sep.multScalar(1.5);
+	ali.multScalar(1.0);
+	coh.multScalar(1.0);
+	sum.addVect(sep);
+	sum.addVect(ali);
+	sum.addVect(coh);
+	return sum;
 }
 
 Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> *all_obstacles) {
@@ -136,25 +127,7 @@ Vect Boid::AvoidVerticalBorders() {
 void Boid::update(boost::ptr_vector<Boid> *all_boids, boost::ptr_vector<SimuObject> *all_obstacles) {
 
 	// Separation, Aligment, and Cohesion
-	// applyForce(rulesBoid(all_boids));
-
-	if (conf->rules & 1) {
-		Vect sep = Separation(all_boids);
-		sep.multScalar(1.5);
-		applyForce(sep);
-	}
-
-	if (conf->rules & 2) {
-		Vect ali = Alignement(all_boids);
-		ali.multScalar(1.0);
-		applyForce(ali);
-	}
-
-	if (conf->rules & 4) {
-		Vect coh = Cohesion(all_boids);
-		coh.multScalar(1.0);
-		applyForce(coh);
-	}
+	applyForce(rulesBoid(all_boids));
 
 	// Obstacles
 	if (conf->rules & 8) {
