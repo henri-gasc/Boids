@@ -21,7 +21,7 @@ public:
 	int nbr_obstacles = 0;
 	int nbr_rules = 5;
 	int rules = 0b11111; // See help
-	int nbr_threads = 0;
+	int nbr_threads = 10;
 	bool save_to_file = false;
 	bool show_simulations = true;
 	std::string save_dir = "images";
