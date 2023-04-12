@@ -260,7 +260,8 @@ public:
 	Vect pos;
 	Vect speed;
 	Vect acceleration;
-	Vect grid;
+	int grid_x = 0;
+	int grid_y = 0;
 	float vision_radius = 50;
 	float r = 5.f;
 	sf::CircleShape shape;
@@ -270,7 +271,6 @@ public:
 		pos(0, 0),
 		speed(0, 0),
 		acceleration(0, 0),
-		grid(0, 0),
 		shape(2*r)
 	{
 		conf = config;
@@ -307,8 +307,8 @@ public:
 		apply_borders();
 		shape.setRotation(get_angle());
 		shape.setPosition(pos.x-r, pos.y-r);
-		grid.x = (int) pos.x/vision_radius;
-		grid.y = (int) pos.y/vision_radius;
+		grid_x = (int) pos.x/vision_radius;
+		grid_y = (int) pos.y/vision_radius;
 	}
 
 	/**

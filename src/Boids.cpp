@@ -6,8 +6,8 @@ void Boid::update_pos() {
 	apply_borders();
 	shape.setRotation(get_angle());
 	shape.setPosition(pos.x, pos.y);
-	grid.x = (int) pos.x/vision_radius;
-	grid.y = (int) pos.y/vision_radius;
+	grid_x = (int) pos.x/vision_radius;
+	grid_y = (int) pos.y/vision_radius;
 }
 
 void Boid::applyForce(Vect force) {
@@ -24,6 +24,11 @@ Vect Boid::rulesBoid(boost::ptr_vector<Boid> *all_boids) {
 	int count_sep = 0;
 	int count_ali_coh = 0;
 	for (int i = 0; i < (int) all_boids->size(); i++) {
+		int x = all_boids->at(i).grid_x;
+		int y = all_boids->at(i).grid_y;
+		if ((x < grid_x - 1) || (x > grid_x + 1) || (y < grid_y - 1) || (y > grid_y + 1)) {
+			continue;
+		}
 		float d = distance(all_boids->at(i).pos);
 		if (d <= 0) { continue; }
 		if ((d < distance_boids) && (conf->rules & 1)) {

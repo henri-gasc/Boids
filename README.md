@@ -13,9 +13,8 @@ To compile this project, you need [CMake](https://cmake.org), [Boost](http://boo
   - [ ] Allow boids to adopt a tear-drop shape around the obstacles
 - [x] Takes arguments from the command line
 - [x] Allow saving output to file
-- [ ] Allow multi cores
 - [ ] Allow inputs from the keyboard (add/delete objects, follow object, etc)
-- [ ] Speed up the algorithms
+- [x] Speed up the algorithms
 - [ ] Allow adding new rules easily
 - [ ] Make the code easier to read
 - [ ] Go 3D

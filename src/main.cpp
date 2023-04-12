@@ -39,6 +39,9 @@ int main(int argc, char **argv) {
 		counter++;
 		for (int i = 0; i < conf.nbr_boids; i++) {
 			all_Boids.at(i).update(&all_Boids, &all_Obstacles);
+			// if (i == 0) {
+			// 	printf("\r%i, %i\n", all_Boids.at(i).grid_x, all_Boids.at(i).grid_y);
+			// }
 		}
 		for (int i = 0; i < conf.nbr_boids; i++) {
 			app.draw(all_Boids.at(i).shape);

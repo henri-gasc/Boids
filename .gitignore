@@ -32,4 +32,13 @@ build
 .idea/
 Cmake-build-*/
 
+# Images and videos
 images
+*.png
+*.tiff
+*.webp
+*.jpg
+*.jpeg
+videos
+*.mp4
+*.webm
