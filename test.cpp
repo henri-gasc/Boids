@@ -1,11 +1,7 @@
 #include <cstdio>
 
 int main() {
-    int a = 0b1111;
-    if (a & 1) {
-        printf("test1");
-    }
-    if (a & 4) {
-        printf("tyducftez");
-    }
+    int a = 0b11111;
+    int i = 2;
+    printf("%i xor %i = %i\n", a, i, a ^ i);
 }

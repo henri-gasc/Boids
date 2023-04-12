@@ -14,10 +14,9 @@ public:
 	Config *conf;
 
 	Boid(int pos_x, int pos_y, RandomNumberGenerator *rng, Config* config):
-		SimuObject(config),
+		SimuObject(config, pos_x + rng->pick(), pos_y + rng->pick()),
 		shape(3.f, 3)
 	{
-		pos.set(pos_x + rng->pick(), pos_y + rng->pick());
 		speed.set(rng->pick()/100, rng->pick()/100),
 		conf = config;
 	};

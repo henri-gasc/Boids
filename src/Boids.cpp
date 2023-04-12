@@ -23,7 +23,7 @@ Vect Boid::rulesBoid(boost::ptr_vector<Boid> *all_boids) {
 	Vect avg_locat(0, 0);
 	int count_sep = 0;
 	int count_ali_coh = 0;
-	for (int i = 0; i < (int) all_boids->size(); i++) {
+	for (size_t i = 0; i < all_boids->size(); i++) {
 		int x = all_boids->at(i).grid_x;
 		int y = all_boids->at(i).grid_y;
 		if ((x < grid_x - 1) || (x > grid_x + 1) || (y < grid_y - 1) || (y > grid_y + 1)) {
@@ -85,7 +85,7 @@ Vect Boid::rulesBoid(boost::ptr_vector<Boid> *all_boids) {
 Vect Boid::AvoidObstacles(boost::ptr_vector<SimuObject> *all_obstacles) {
 	Vect steering(0, 0);
 	int count = 0;
-	for (int i = 0; i < (int) all_obstacles->size(); i++) {
+	for (size_t i = 0; i < all_obstacles->size(); i++) {
 		float d = distance(all_obstacles->at(i).pos);
 		if ((d > 0) && (d < distance_obstacle)) {
 			Vect diff(0, 0);

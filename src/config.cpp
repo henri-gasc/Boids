@@ -27,6 +27,14 @@ int R1ITE0(const bool cond) {
 	}
 }
 
+void printRules(int rules) {
+	printf("Separation: %i\n", R1ITE0(rules & 1));
+	printf("Aligment:   %i\n", R1ITE0(rules & 2));
+	printf("Cohesion:   %i\n", R1ITE0(rules & 4));
+	printf("Obstacles:  %i\n", R1ITE0(rules & 8));
+	printf("Borders:    %i\n", R1ITE0(rules & 16));
+}
+
 /**
  * @brief Make sure the argument is a number greater than 1
  * 
@@ -68,11 +76,7 @@ Config handle_arguments(int argc, char **argv) {
 			break;
 		case 'r':
 			conf.rules = strtold(optarg, NULL);
-			printf("Separation: %i\n", R1ITE0(conf.rules & 1));
-			printf("Aligment:   %i\n", R1ITE0(conf.rules & 2));
-			printf("Cohesion:   %i\n", R1ITE0(conf.rules & 4));
-			printf("Obstacles:  %i\n", R1ITE0(conf.rules & 8));
-			printf("Borders:    %i\n", R1ITE0(conf.rules & 16));
+			printRules(conf.rules);
 			break;
 
 		case 's':

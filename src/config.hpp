@@ -34,6 +34,13 @@ public:
 void printHelp();
 
 /**
+ * @brief Print the rules and their status
+ * 
+ * @param conf The config
+ */
+void printRules(int rules);
+
+/**
  * @brief Study the arguments and change the configuration accordingly
  * 
  * @param argc The number of arguments

@@ -2,7 +2,6 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <SFML/Window/Mouse.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <random>
@@ -35,16 +34,6 @@ public:
 	 * @return false if the app is not running
 	 */
 	bool isRunning() {
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-			else if (event.key.code == sf::Keyboard::Q) {
-				window.close();
-			}
-		}
-
 		window.clear();
 		texture.clear();
 		return window.isOpen();
@@ -267,13 +256,14 @@ public:
 	sf::CircleShape shape;
 	Config *conf;
 
-	SimuObject(Config *config):
+	SimuObject(Config *config, int x, int y):
 		pos(0, 0),
 		speed(0, 0),
 		acceleration(0, 0),
 		shape(2*r)
 	{
 		conf = config;
+		pos.set(x+r, y+r);
 		update_pos();
 		shape.setFillColor(sf::Color::Red);
 	}
