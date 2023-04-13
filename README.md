@@ -18,6 +18,8 @@ key|effect
 `Ctrl`+`C` | Toggle the 'Cohesion' rule
 `Ctrl`+`O` | Toggle the 'Obstacles' rule
 `Ctrl`+`B` | Toggle the 'Borders' rule
+Pressing `F` | Follow the boid closest to the mouse (when pressed)
+Releasing `F` | Return to the main view
 
 ## TODO
 
@@ -29,7 +31,7 @@ key|effect
 - [ ] Allow inputs from the keyboard
   - [x] add objects
   - [x] change rules
-  - [x] follow object
+  - [x] follow boid
 - [x] Speed up the algorithms
 - [ ] Allow adding new rules easily
 - [ ] Make the code easier to read

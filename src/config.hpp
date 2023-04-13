@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -25,6 +26,9 @@ public:
 	bool save_to_file = false;
 	bool show_simulations = true;
 	std::string save_dir = "images";
+	sf::Color color_normal_boid = sf::Color::White;
+	sf::Color color_boid_followed = sf::Color::Magenta;
+	sf::Color color_object = sf::Color::Red;
 };
 
 /**

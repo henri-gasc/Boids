@@ -28,11 +28,13 @@ int R1ITE0(const bool cond) {
 }
 
 void printRules(int rules) {
-	printf("Separation: %i\n", R1ITE0(rules & 1));
-	printf("Aligment:   %i\n", R1ITE0(rules & 2));
-	printf("Cohesion:   %i\n", R1ITE0(rules & 4));
-	printf("Obstacles:  %i\n", R1ITE0(rules & 8));
-	printf("Borders:    %i\n", R1ITE0(rules & 16));
+	printf("Current rules:\n");
+	printf("  Separation: %i\n", R1ITE0(rules & 1));
+	printf("  Aligment:   %i\n", R1ITE0(rules & 2));
+	printf("  Cohesion:   %i\n", R1ITE0(rules & 4));
+	printf("  Obstacles:  %i\n", R1ITE0(rules & 8));
+	printf("  Borders:    %i\n", R1ITE0(rules & 16));
+	printf("\n");
 }
 
 /**
@@ -76,7 +78,6 @@ Config handle_arguments(int argc, char **argv) {
 			break;
 		case 'r':
 			conf.rules = strtold(optarg, NULL);
-			printRules(conf.rules);
 			break;
 
 		case 's':
@@ -103,5 +104,6 @@ Config handle_arguments(int argc, char **argv) {
 			exit(1);
 		}
 	}
+	printRules(conf.rules);
 	return conf;
 }

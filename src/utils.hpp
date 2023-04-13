@@ -2,82 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <cstdio>
-#include <cstdlib>
 #include <random>
 #include "config.hpp"
-
-/**
- * @brief Class wrapper for the screen
- * 
- */
-class Application {
-public:
-	sf::RenderWindow window;
-	sf::RenderTexture texture;
-	Config *conf;
-
-	Application(Config *config):
-		window(sf::VideoMode(config->window_width, config->window_height), "SFML", sf::Style::Default)
-	{
-		conf = config;
-		if (conf->save_to_file) {
-			texture.create(conf->window_width, conf->window_height);
-		}
-		window.setFramerateLimit(conf->framerate);
-	}
-
-	/**
-	 * @brief Test if the app is running, apply some events too
-	 * 
-	 * @return true if the app if running
-	 * @return false if the app is not running
-	 */
-	bool isRunning() {
-		window.clear();
-		texture.clear();
-		return window.isOpen();
-	}
-
-	/**
-	 * @brief Draw the object on the screen
-	 * 
-	 * @param drawable The object to draw
-	 */
-	void draw(const sf::Drawable & drawable) {
-		if (conf->show_simulations) {
-			window.draw(drawable);
-		}
-		if (conf->save_to_file) {
-			texture.draw(drawable);
-		}
-	}
-
-	/**
-	 * @brief Wrapper around the RenderWindow class
-	 * 
-	 */
-	void display() {
-		window.display();
-	}
-
-	/**
-	 * @brief Save the current frame of the simulation to disk
-	 * 
-	 * @param number The number of the frame
-	 */
-	void save(int number) {
-		if (not conf->save_to_file) return;
-		char name[100] = "";
-		strcat(name, conf->save_dir.c_str());
-		strcat(name, "/part.");
-		char format[6] = ".%05i";
-		sprintf(strstr(name, "."), format, number);
-		strcat(name, ".png");
-		texture.getTexture().copyToImage().saveToFile(name);
-		printf("Saved frame %i\n", number);
-	}
-};
 
 class Vect {
 public:
@@ -213,7 +139,7 @@ private:
 public:
 	int min;
 	int max;
-	RandomNumberGenerator(int minimum = 0, int maximum = 1):
+	RandomNumberGenerator(int minimum = 0, int maximum = 0):
 		distrib(minimum, maximum),
 		gen(rd())
 	{
@@ -265,7 +191,7 @@ public:
 		conf = config;
 		pos.set(x+r, y+r);
 		update_pos();
-		shape.setFillColor(sf::Color::Red);
+		shape.setFillColor(conf->color_object);
 	}
 
 	/**

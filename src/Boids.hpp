@@ -10,15 +10,17 @@ public:
 	float max_speed = 3.5;
 	float max_force = 0.5;
 	float border = 100;
+	float r = 3.f;
 	sf::CircleShape shape;
 	Config *conf;
 
 	Boid(int pos_x, int pos_y, RandomNumberGenerator *rng, Config* config):
 		SimuObject(config, pos_x + rng->pick(), pos_y + rng->pick()),
-		shape(3.f, 3)
+		shape(r, 3)
 	{
 		speed.set(rng->pick()/100, rng->pick()/100),
 		conf = config;
+		shape.setFillColor(conf->color_normal_boid);
 	};
 
 	/* We need this despite beeing the same function as in SimuObject
