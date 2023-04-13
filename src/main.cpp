@@ -51,7 +51,6 @@ int main(int argc, char **argv) {
 
 		if (app.boid_followed != NULL) {
 			app.main_view.setCenter(sf::Vector2f(app.boid_followed->pos.x, app.boid_followed->pos.y));
-			printf("%f\n", app.boid_followed->shape.getRadius());
 		}
 		app.window.setView(app.main_view);
 		app.display();

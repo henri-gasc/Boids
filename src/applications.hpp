@@ -2,6 +2,8 @@
 
 #include "Boids.hpp"
 #include "utils.hpp"
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
 
 inline void toggleRules(int *rules, int repr) {
 	*rules ^= repr;
